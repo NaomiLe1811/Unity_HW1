@@ -13,7 +13,7 @@ public enum TargetPoint
 public class PlayerController1 : MonoBehaviour
 {
     [SerializeField]
-    public int mySpeed;
+    public int mySpeed = 10;
 
     //gan trang thai dau tien
     private TargetPoint nextPoint = TargetPoint.topLeft;
@@ -41,7 +41,7 @@ public class PlayerController1 : MonoBehaviour
 
         float distance = moveDirection.magnitude;
 
-        if(distance > 0.1f)
+        if (distance > 0.1f)
         {
             //chua toi thi di chuyen tiep
             transform.position = Vector3.MoveTowards(transform.position, currentPoint.position, mySpeed * Time.deltaTime);
@@ -50,9 +50,9 @@ public class PlayerController1 : MonoBehaviour
         {
             //chuyen sang vi tri moi
             SetNextTarget(nextPoint);
-            
+
         }
-        
+
         //thay doi goc quay theo huong target
         //cong thuc toan vector huong
         Vector3 direction = currentPoint.position - transform.position;
@@ -80,6 +80,6 @@ public class PlayerController1 : MonoBehaviour
                 currentPoint = bottomLeftTransform;
                 nextPoint = TargetPoint.topLeft;
                 break;
-        } 
+        }
     }
 }
