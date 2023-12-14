@@ -10,20 +10,28 @@ public enum TargetPoint
     bottomLeft,
 }
 
+//manual hay automatic
+public enum DriveMode
+{
+    Manual,
+    Auto,
+}
+
 public class PlayerController1 : MonoBehaviour
 {
-    [SerializeField]
-    public int mySpeed = 10;
+    [SerializeField] private int mySpeed = 10;
+    [SerializeField] private int rotationSpeed = 10;
 
     //gan trang thai dau tien
     private TargetPoint nextPoint = TargetPoint.topLeft;
 
-    //khai bao vi tri cua 4 diem
+    //khai bao vi tri (toa do x,y,z) cua 4 diem
     public Transform topLeftTransform;
     public Transform topRightTransform;
     public Transform bottomRightTransform;
     public Transform bottomLeftTransform;
 
+    private DriveMode mode = DriveMode.Manual; //trang thai hien tai
     //khai bao vi tri hien tai
     private Transform currentPoint;
 
@@ -36,8 +44,20 @@ public class PlayerController1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(mode == DriveMode.Auto)
+        {
+            AutoMode();
+        }
+        else if (mode == DriveMode.Manual)
+        {
+            ManualMode();
+        }
+    }
+
+    void AutoMode()
+    {
         Vector3 targetPoint = currentPoint.position;
-        Vector3 moveDirection = targetPoint - transform.position;
+        Vector3 moveDirection = currentPoint.position - transform.position;
 
         float distance = moveDirection.magnitude;
 
@@ -50,14 +70,41 @@ public class PlayerController1 : MonoBehaviour
         {
             //chuyen sang vi tri moi
             SetNextTarget(nextPoint);
-
         }
 
         //thay doi goc quay theo huong target
-        //cong thuc toan vector huong
+        //cong thuc toan vector huong quay
         Vector3 direction = currentPoint.position - transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
         transform.rotation = targetRotation;
+    }
+    void ManualMode()
+    {
+        //Input.GetAxis
+        //float horizontalInput = Input.GetAxis("Horizontal");
+        //float verticalInput = Input.GetAxis("Vertical");
+
+        //tinh toan vector di chuyen dua ten input
+        //Vector3 movement = new Vector3(horizontalInput,0, verticalInput) * mySpeed * Time.deltaTime;
+
+        //ap vi tri
+        //transform.Translate(movement);
+
+        // Lấy giá trị trục ngang và trục dọc từ bàn phím
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        // Tính toán di chuyển và quay
+        float translation = verticalInput * mySpeed * Time.deltaTime;
+        float rotation = horizontalInput * rotationSpeed * Time.deltaTime;
+
+        // Di chuyển chiếc xe theo trục dọc (forward)
+        transform.Translate(0f, 0f, translation);
+
+        // Quay chiếc xe theo trục ngang (turn)
+        transform.Rotate(0f, rotation, 0f);
+
+        Debug.Log(horizontalInput + ", " + verticalInput);    
     }
 
     void SetNextTarget(TargetPoint target)
