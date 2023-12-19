@@ -19,8 +19,13 @@ public enum DriveMode
 
 public class PlayerController1 : MonoBehaviour
 {
+    [SerializeField] private Rigidbody rb;
     [SerializeField] private int mySpeed = 10;
     [SerializeField] private int rotationSpeed = 10;
+    [SerializeField] private int damage = 10;
+    [SerializeField] private int fuel;
+    [SerializeField] private int capacity = 10;
+    [SerializeField] private int laps = 0;
 
     //gan trang thai dau tien
     private TargetPoint nextPoint = TargetPoint.topLeft;
@@ -39,6 +44,8 @@ public class PlayerController1 : MonoBehaviour
     void Start()
     {
         currentPoint = topLeftTransform;
+        rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
@@ -106,7 +113,6 @@ public class PlayerController1 : MonoBehaviour
 
         Debug.Log(horizontalInput + ", " + verticalInput);    
     }
-
     void SetNextTarget(TargetPoint target)
     {
         switch (target)
@@ -127,6 +133,29 @@ public class PlayerController1 : MonoBehaviour
                 currentPoint = bottomLeftTransform;
                 nextPoint = TargetPoint.topLeft;
                 break;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "ThungXang")
+        {
+            other.gameObject.SetActive(false);
+            capacity = capacity + 5;
+        } else if(other.gameObject.tag == "SpawnPoint")
+        {
+            laps++;
+            Debug.Log("Laps++");
+        } 
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+         if (collision.gameObject.tag == "HangRao")
+        {
+            damage -= 5;
+            if(damage == 0)
+            {
+                Time.timeScale = 0;
+            }
         }
     }
 }
