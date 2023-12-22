@@ -14,9 +14,9 @@ public class NewBehaviourScript : MonoBehaviour
         Vector3 newPosition = target.position - target.forward * distance;
 
         // Smoothly move the camera towards the new position
-       //transform.position = Vector3.Lerp(transform.position, newPosition, speed * Time.deltaTime);
+       transform.position = Vector3.Lerp(transform.position, newPosition, speed * Time.deltaTime);
 
         // Look at the target from the new position
-        //transform.LookAt(target.position);
+        transform.LookAt(target.position);
     }
 }

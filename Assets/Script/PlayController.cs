@@ -21,7 +21,7 @@ public class PlayerController1 : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
     [SerializeField] private int mySpeed = 10;
-    [SerializeField] private int rotationSpeed = 10;
+    [SerializeField] private int rotationSpeed = 50;
     [SerializeField] private int damage = 10;
     [SerializeField] private int fuel;
     [SerializeField] private int capacity = 10;
@@ -145,7 +145,11 @@ public class PlayerController1 : MonoBehaviour
         {
             laps++;
             Debug.Log("Laps++");
-        } 
+        }
+        else if (other.gameObject.tag == "ThungXangXanh")
+        {
+            fuel += 10;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
