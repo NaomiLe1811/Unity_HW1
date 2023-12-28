@@ -20,12 +20,13 @@ public enum DriveMode
 public class PlayerController1 : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private int mySpeed = 10;
+    [SerializeField] private int mySpeed = 40;
     [SerializeField] private int rotationSpeed = 50;
     [SerializeField] private int damage = 10;
     [SerializeField] private int fuel;
     [SerializeField] private int capacity = 10;
     [SerializeField] private int laps = 0;
+    [SerializeField] public float maxRotation = 10f;
 
     //gan trang thai dau tien
     private TargetPoint nextPoint = TargetPoint.topLeft;
@@ -106,10 +107,20 @@ public class PlayerController1 : MonoBehaviour
         float rotation = horizontalInput * rotationSpeed * Time.deltaTime;
 
         // Di chuyển chiếc xe theo trục dọc (forward)
-        transform.Translate(0f, 0f, translation);
+        //transform.Translate(0f, 0f, translation);
 
         // Quay chiếc xe theo trục ngang (turn)
-        transform.Rotate(0f, rotation, 0f);
+        //transform.Rotate(0f, rotation, 0f);
+
+        // Tính toán lực di chuyển và lực quay
+        Vector3 moveForce = transform.forward * translation * mySpeed;
+        Vector3 rotationTorque = new Vector3(0f, rotation, 0f);
+
+        // Sử dụng AddForce để thêm lực di chuyển
+        rb.AddForce(moveForce);
+
+        // Sử dụng AddTorque để thêm lực quay
+        rb.AddTorque(rotationTorque * Mathf.Clamp01(Mathf.Abs(rotation) / maxRotation));
 
         Debug.Log(horizontalInput + ", " + verticalInput);    
     }
